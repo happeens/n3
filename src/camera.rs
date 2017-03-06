@@ -1,4 +1,4 @@
-const CAMERA_SPEED: f64 = 0.3;
+const CAMERA_SPEED: f64 = 0.03;
 
 pub struct Camera {
     pub pos: [f64; 2],
@@ -21,8 +21,7 @@ impl Camera {
         let target_pos = [self.target[0] - 0.5 * super::SCREEN_WIDTH as f64,
                           self.target[1] - 0.5 * super::SCREEN_HEIGHT as f64];
         let distance = [target_pos[0] - self.pos[0], target_pos[1] - self.pos[1]];
-        let factor = 0.05;
-        self.pos[0] += distance[0] * factor;
-        self.pos[1] += distance[1] * factor;
+        self.pos[0] += distance[0] * CAMERA_SPEED;
+        self.pos[1] += distance[1] * CAMERA_SPEED;
     }
 }

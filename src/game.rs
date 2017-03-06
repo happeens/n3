@@ -31,14 +31,19 @@ impl Game {
     }
 
     pub fn try_move_player(&mut self, v: [f64; 2]) {
-        let mut target = self.player.get_pos();
-        target[0] += v[0];
-        target[1] += v[1];
+        let player_pos = self.player.get_pos();
+        let target = [player_pos[0] + v[0], player_pos[1] + v[1]];
+        let mut vel = v;
 
-        if !self.world.check_pos_collides(target) {
-            self.player.set_vel(v);
-        } else {
-            self.player.set_vel([0.0, 0.0]);
+        if self.world.check_pos_collides([target[0], player_pos[1]]) {
+            vel[0] = 0.0;
+            vel[1] *= 0.707106781;
+        } 
+        if self.world.check_pos_collides([player_pos[0], target[1]]) {
+            vel[1] = 0.0;
+            vel[0] *= 0.707106781;
         }
+
+        self.player.set_vel(vel);
     }
 }
