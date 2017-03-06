@@ -1,13 +1,11 @@
 extern crate piston_window;
 
+mod game;
+use game::Game;
+
 mod world;
-use world::World;
-
 mod player;
-use player::Player;
-
 mod camera;
-use camera::Camera;
 
 use piston_window::*;
 
@@ -23,15 +21,10 @@ fn main() {
         .build()
         .unwrap();
 
-    let mut world = World::new_default();
-    let mut player = Player::new(World::from_tile_pos([3, 3]));
-    let mut camera = Camera::new([0.0, 0.0]);
-
+    let mut game = Game::new();
     let mut held_keys = Vec::new();
 
-
     while let Some(e) = window.next() {
-        // input
         if let Some(pressed) = e.press_args() {
             match pressed {
                 Button::Keyboard(key) => {
@@ -54,35 +47,42 @@ fn main() {
             }
         }
 
-        if let Some(key) = held_keys.last() {
-            match key {
-                &Key::W => {
-                    let target = World::add_tile_offset(player.get_pos(), [0, -1]);
-                    player.try_move(target);
+        if let Some(update) = e.update_args() {
+            let mut move_intention = [0.0, 0.0];
+            for key in held_keys.iter() {
+                match key {
+                    &Key::W => {
+                        move_intention[1] -= 1.0;
+                    }
+                    &Key::S => {
+                        move_intention[1] += 1.0;
+                    }
+                    &Key::A => {
+                        move_intention[0] -= 1.0;
+                    }
+                    &Key::D => {
+                        move_intention[0] += 1.0;
+                    }
+                    _ => ()
                 }
-                &Key::S => {
-                    let target = World::add_tile_offset(player.get_pos(), [0, 1]);
-                    player.try_move(target);
-                }
-                &Key::A => {
-                    let target = World::add_tile_offset(player.get_pos(), [-1, 0]);
-                    player.try_move(target);
-                }
-                &Key::D => {
-                    let target = World::add_tile_offset(player.get_pos(), [1, 0]);
-                    player.try_move(target);
-                }
-                _ => ()
             }
+
+            if move_intention[0] != 0.0 && move_intention[1] != 0.0 {
+                let diag_mult = 0.707106781;
+                move_intention[0] *= diag_mult;
+                move_intention[1] *= diag_mult;
+            }
+
+            game.try_move_player(move_intention);
+            game.update(update.dt);
         }
 
-        // camera.follow(player.get_pos());
-        player.update();
+        if let Some(_) = e.render_args() {
+            window.draw_2d(&e, |c, g| {
+                clear([1.0; 4], g);
+                game.draw(&c, g);
+            });
+        }
 
-        window.draw_2d(&e, |c, g| {
-            clear([1.0; 4], g);
-            world.draw(&c, g, &camera);
-            player.draw(&c, g, &camera);
-        });
     }
 }

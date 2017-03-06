@@ -86,6 +86,11 @@ impl World {
          pos[1] + (offset[1] as f64 * TILE_HEIGHT as f64)]
     }
 
+    pub fn check_pos_collides(&self, pos: [f64; 2]) -> bool {
+        let pos = World::to_tile_pos(pos);
+        self.check_tile_collides(pos)
+    }
+
     pub fn check_tile_collides(&self, pos: [u32; 2]) -> bool {
         let pos = [pos[0] as usize, pos[1] as usize];
         if pos[1] >= self.fields.len() {
