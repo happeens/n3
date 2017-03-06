@@ -51,8 +51,8 @@ impl World {
     pub fn draw(&self, c: &Context, g: &mut G2d, cam: &Camera) {
         for (y, row) in self.fields.iter().enumerate() {
             for (x, field) in row.iter().enumerate() {
-                let field_x = x as f64 * TILE_WIDTH as f64 + cam.pos[0];
-                let field_y = y as f64 * TILE_HEIGHT as f64 + cam.pos[1];
+                let field_x = x as f64 * TILE_WIDTH as f64 - cam.pos[0];
+                let field_y = y as f64 * TILE_HEIGHT as f64 - cam.pos[1];
 
                 // draw bounds
                 rectangle([0.0, 0.0, 0.0, 1.0],

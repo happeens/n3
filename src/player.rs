@@ -29,8 +29,8 @@ impl Player {
 
     pub fn draw(&self, c: &Context, g: &mut G2d, cam: &Camera) {
         rectangle(self.color,
-                  [self.pos[0] + cam.pos[0] - 0.5 * PLAYER_WIDTH as f64,
-                   self.pos[1] + cam.pos[1] - 0.5 * PLAYER_HEIGHT as f64,
+                  [self.pos[0] - cam.pos[0] - (0.5 * PLAYER_WIDTH as f64),
+                   self.pos[1] - cam.pos[1] - (0.5 * PLAYER_HEIGHT as f64),
                    PLAYER_WIDTH as f64, PLAYER_HEIGHT as f64],
                   c.transform, g);
     }

@@ -20,6 +20,8 @@ impl Game {
     }
 
     pub fn update(&mut self, dt: f64) {
+        self.camera.set_target(self.player.get_pos());
+        self.camera.update(dt);
         self.player.update(dt);
     }
 
