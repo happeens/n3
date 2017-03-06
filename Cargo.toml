@@ -1,0 +1,7 @@
+[package]
+name = "n3"
+version = "0.1.0"
+authors = ["Hilmar Wiegand <hilmar.wiegand@flameshome.net>"]
+
+[dependencies]
+piston_window = "*"
